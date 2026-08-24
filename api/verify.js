@@ -12,7 +12,7 @@ export default async function handler(req, res) {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       body: new URLSearchParams({
-        product_permalink: 'ytwiuj',
+        product_id: 'jPKXJuUMvb4OZMNOlbglNg==',
         license_key: key
       })
     });
