@@ -144,16 +144,18 @@ const SLIDES=[
 let cur=0;
 
 async function unlock(){
-  const key=document.getElementById('keyInput').value.trim();
+  const key=document.getElementById('keyInput').value.trim().toUpperCase().replace(/\s+/g,'');
   if(!key){return;}
   const btn=document.getElementById('unlockBtn');
   const err=document.getElementById('lockErr');
   btn.disabled=true;
   btn.innerHTML='<i class="ti ti-loader" style="animation:spin .8s linear infinite"></i> Verifying...';
   try{
-    const r=await fetch('/api/verify',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({key})});
-    const data=await r.json();
-    if(data.valid){
+    const enc=new TextEncoder();
+    const buf=await crypto.subtle.digest('SHA-256',enc.encode(key));
+    const hash=Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+    const valid=(hash==='65d260e90fb03cdd111d80e3d66d33e543192a012bbdd7eaa67b0b2310f34dc2');
+    if(valid){
       localStorage.setItem('gilgal_pa_guide','1');
       showGuide();
     }else{
